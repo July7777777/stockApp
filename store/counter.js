@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 export const useCounterStore = defineStore('counter', {
   state: () => ({
+    baseUrl:'',// 全局接口地址
     count: 0
   }),
   getters: {
