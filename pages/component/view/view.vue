@@ -8,6 +8,13 @@
         size="mini"
         @click="Search"
       >按钮</button>
+      <button
+        class="mini-btn"
+        type="primary"
+        size="mini"
+        @click="get2"
+      >按钮2</button>
+
       <view class="">
         <uni-table
           border
@@ -33,7 +40,7 @@
 </template>
 <script setup>
   import { ref, reactive } from 'vue';
-  import { fundSearch } from '@/api/apiStock.js'; // 根据实际路径引入
+  import { fundSearch, fundVarietieValuationDetail } from '@/api/apiStock.js'; // 根据实际路径引入
   // 使用 ref 创建单个响应式数据
   const count = ref(0);
   console.log(process.env.NODE_ENV)
@@ -54,6 +61,16 @@
       //   }
       // })
       let res = await fundSearch(p);
+      console.log(res);
+    } catch (error) {
+      console.error('请求出错:', error);
+    }
+  };
+  const get2 = async () => {
+    console.log('2按钮被点击了');
+    try {
+      let p = { FCODE: 160125 };
+      let res = await fundVarietieValuationDetail(p);
       console.log(res);
     } catch (error) {
       console.error('请求出错:', error);

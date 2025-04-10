@@ -16,4 +16,6 @@ import {get,post} from './http.js';
 
 // 例如/fundSearch?m=1&key=11
 export const fundSearch = params => get('/fundSearch', params);
-export const fundSearch2 = params => get('/fundSearch', params);
+
+// 获取基金净值估算-实时   FCODE 基金code
+export const fundVarietieValuationDetail = params => get('/fundVarietieValuationDetail', params);
