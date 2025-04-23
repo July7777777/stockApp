@@ -63,12 +63,31 @@
 		>
 			<uni-popup-dialog
 				ref="inputClose"
-				mode="input"
+				mode="base"
 				title="请输入IP地址"
-				value=""
-				placeholder="例如 127.0.0.1"
 				@confirm="pingConfirm"
-			></uni-popup-dialog>
+			>
+				<!-- value=""
+				placeholder="" -->
+				<view class="uni-flex">
+					<view class="selectBox">
+						<uni-data-select
+							:clear="false"
+							v-model="prefix"
+							:localdata="range"
+						></uni-data-select>
+					</view>
+					<view>
+						<uni-easyinput
+							focus
+							:clearable="false"
+							trim="all"
+							v-model="ipAdds"
+							placeholder="例如 127.0.0.1"
+						></uni-easyinput>
+					</view>
+				</view>
+			</uni-popup-dialog>
 			<!-- :before-close="true" -->
 			<view
 				v-for="(i, n) in arr"
@@ -216,7 +235,13 @@
 		// }
 		// #endif
 	]);
-
+	// 弹出层
+	const ipAdds = ref('')
+	const prefix = ref('https://')
+	const range = ref([
+		{ value: 'http://', text: "http://" },
+		{ value: 'https://', text: "https://" },
+	]);
 	// 定义分享函数
 	const onShareAppMessage = () => {
 		return {
@@ -285,8 +310,10 @@
 	// };
 
 	const pingConfirm = url => {
-
-		url = `http://${url}:3000`;
+		let pre = prefix.value
+		let ip = ipAdds.value
+		url = pre + ip
+		// `http://${url}:3000`;
 		loading.value = true;
 		counter.baseUrl = url;
 		// this.arr = [{ label: 'IP', value: url }]
@@ -355,6 +382,14 @@
 	};
 </script>
 
-<style>
+<style scoped lang="scss">
 	@import '../../../common/uni-nvue.css';
+
+	.selectBox {
+		width: 70px;
+	}
+
+	::v-deep .uni-popup__error {
+		color: #909399 !important;
+	}
 </style>

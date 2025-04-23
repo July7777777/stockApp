@@ -6,6 +6,7 @@ const defaultOptions = {
   method: 'GET',
   data: {},
   header: {
+    'bypass-tunnel-reminder': 'stockApp',
     'content-type': 'application/json',
   },
   dataType: 'json',
