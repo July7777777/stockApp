@@ -13,7 +13,7 @@
 			v-if="!hasLeftWin"
 			class="uni-hello-text"
 		>
-			<text class="hello-text">以下是部分模板示例，更多模板见插件市场：</text>
+			<text class="hello-text">a以下是部分模板示例，更多模板见插件市场：</text>
 			<u-link
 				class="hello-link"
 				href="https://ext.dcloud.net.cn"
@@ -61,6 +61,7 @@
 			type="dialog"
 			:is-mask-click="false"
 		>
+
 			<uni-popup-dialog
 				ref="inputClose"
 				mode="base"
@@ -69,7 +70,7 @@
 			>
 				<!-- value=""
 				placeholder="" -->
-				<view class="uni-flex">
+				<view class="border">
 					<view class="selectBox">
 						<uni-data-select
 							:clear="false"
@@ -77,8 +78,9 @@
 							:localdata="range"
 						></uni-data-select>
 					</view>
-					<view>
+					<view class="inputBox">
 						<uni-easyinput
+							:inputBorder="false"
 							focus
 							:clearable="false"
 							trim="all"
@@ -88,14 +90,22 @@
 					</view>
 				</view>
 			</uni-popup-dialog>
-			<!-- :before-close="true" -->
+		</uni-popup>
+		<!-- :before-close="true" -->
+		<uni-popup
+			type="top"
+			ref="NetInfo"
+			background-color="#fff"
+		>
 			<view
+				class="InfoItem"
 				v-for="(i, n) in arr"
 				:key="n"
 			>
-				<label :for="i.label">{{ i.value }}</label>
+				<text>{{ i.label }}</text>
+				<text style="color: #3efd00;">{{ i.value }}</text>
 			</view>
-			<view v-show="loading">加载中...</view>
+			<view v-if="loading">加载中...</view>
 		</uni-popup>
 	</view>
 </template>
@@ -116,6 +126,10 @@
 		},
 	});
 
+	// 弹出层
+	const inputDialog = ref(null);
+	const inputClose = ref(null);
+	const NetInfo = ref(null);
 	// 定义响应式数据
 	const loading = ref(false);
 	const hideList = ref(['ucharts', 'nav-city-dropdown']);
@@ -235,27 +249,26 @@
 		// }
 		// #endif
 	]);
-	// 弹出层
 	const ipAdds = ref('')
 	const prefix = ref('https://')
 	const range = ref([
-		{ value: 'http://', text: "http://" },
-		{ value: 'https://', text: "https://" },
+		{ value: 'http://', text: "http" },
+		{ value: 'https://', text: "https" },
 	]);
-	// 定义分享函数
-	const onShareAppMessage = () => {
-		return {
-			title: '欢迎体验uni-app',
-			path: '/pages/tabBar/template/template',
-		};
-	};
-
-	// 导航栏按钮点击事件
-	const onNavigationBarButtonTap = () => {
-		uni.navigateTo({
-			url: '/pages/about/about',
-		});
-	};
+	const rangea = ref([{
+		"value": 0,
+		"text": "篮球",
+		"disable": true
+	},
+	{
+		"value": 1,
+		"text": "足球"
+	},
+	{
+		"value": 2,
+		"text": "游泳"
+	},
+	]);
 
 	// 监听路由变化
 	const route = useRoute();
@@ -285,51 +298,40 @@
 		watchRoute();
 	});
 	// #endif
+	// 显示弹窗
+	const showPopup = () => {
+		console.log(inputDialog)
+		if (inputDialog.value) {
+			inputDialog.value.open(); // 通过 inputDialog.value 访问组件实例并调用 open 方法
+			console.log('给我出来');
+		}
+	};
 
-	// 定义 Ping 函数
-	// const Ping = url => {
-	// 	return new Promise(resolve => {
-	// 		const start = Date.now();
-	// 		uni.request({
-	// 			url: url, // 目标URL
-	// 			success: res => {
-	// 				console.log('Ping', res);
-	// 				const duration = Date.now() - start;
-	// 				resolve({
-	// 					msg: duration + ' ms',
-	// 				}); // 成功时返回响应时间
-	// 			},
-	// 			fail: err => {
-	// 				console.error('连接失败，请更换IP', err);
-	// 				resolve({
-	// 					msg: '连接失败，请更换IP',
-	// 				});
-	// 			},
-	// 		});
-	// 	});
-	// };
-
-	const pingConfirm = url => {
+	const pingConfirm = () => {
+		let url = ''
 		let pre = prefix.value
 		let ip = ipAdds.value
 		url = pre + ip
 		// `http://${url}:3000`;
 		loading.value = true;
 		counter.baseUrl = url;
-		// this.arr = [{ label: 'IP', value: url }]
-		let that = this;
+		inputClose.value.close();
+		NetInfo.value.open();
+		arr.value = [{ label: 'IP:', value: url }]
 		uni.getNetworkType({
 			success: function (res) {
 				console.log(res);
 				console.log(res.networkType);
-				// that.arr.push({ label: '网络类型', value: res.networkType })
+				arr.value.push({ label: '网络类型:', value: res.networkType })
 				const start = Date.now();
 				ping()
 					.then(res => {
 						const duration = Date.now() - start;
-						// that.arr.push({ label: '网络状况', value: res.msg })
+						arr.value.push({ label: '网络状况:', value: duration + 'ms' })
 						console.log('pingConfirm', res);
 					}).catch(err => {
+						arr.value.push({ label: '网络状况:', value: '连接失败' }, { label: '提示:', value: '请更换 协议 或 IP ' })
+
 						console.error('catch', err);
 					})
 					.finally(() => {
@@ -340,15 +342,7 @@
 		// console.log(`成功连接到 ${url}，响应时间为 ${duration} ms`);
 	};
 
-	// 显示弹窗
-	const inputDialog = ref(null);
-	const showPopup = () => {
-		console.log(inputDialog)
-		if (inputDialog.value) {
-			inputDialog.value.open(); // 通过 inputDialog.value 访问组件实例并调用 open 方法
-			console.log('给我出来');
-		}
-	};
+
 
 	// 触发折叠
 	const triggerCollapse = e => {
@@ -385,11 +379,46 @@
 <style scoped lang="scss">
 	@import '../../../common/uni-nvue.css';
 
+	.border {
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		width: 200px;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+	}
+
 	.selectBox {
 		width: 70px;
 	}
 
+	.inputBox {
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	::v-deep .uni-select {
+		border: none;
+		border-right: 1px solid #ccc;
+		border-radius: unset;
+		background-color: gainsboro;
+	}
+
 	::v-deep .uni-popup__error {
 		color: #909399 !important;
+	}
+
+	.InfoItem {
+		display: flex;
+		justify-content: space-between;
+		margin: 10px 20px;
+		padding: 4px;
+		background-color: #909399;
+		border-radius: 2px;
+	}
+
+	.InfoItem:last-child {
+		margin-bottom: 20px;
+		// margin-bottom: 30px;
 	}
 </style>

@@ -2,7 +2,11 @@
 	<view class="left-window-style">
 		<view class="second-menu">
 			<!-- <keep-alive> -->
-			<component v-bind:is="active" :hasLeftWin="hasLeftWin" :leftWinActive="leftWinActive"></component>
+			<component
+				v-bind:is="active"
+				:hasLeftWin="hasLeftWin"
+				:leftWinActive="leftWinActive"
+			></component>
 			<!-- </keep-alive> -->
 		</view>
 	</view>
@@ -12,14 +16,14 @@
 	import componentPage from '@/pages/tabBar/component/component.nvue'
 	import API from '@/pages/tabBar/API/API.nvue'
 	import extUI from '@/pages/tabBar/extUI/extUI.nvue'
-	import templatePage from '@/pages/tabBar/template/template.nvue'
+	import templatePage from '@/pages/tabBar/template/template.vue'
 	import {
 		mapMutations,
 		mapState
 	} from 'vuex'
 	let isPcObserver, isPhoneObserver
 	export default {
-		data() {
+		data () {
 			return {
 				nav: [
 					'component',
@@ -43,7 +47,7 @@
 				leftWinActive: state => state.leftWinActive.split('/')[3],
 			})
 		},
-		mounted() {
+		mounted () {
 			isPcObserver = uni.createMediaQueryObserver(this)
 			isPhoneObserver = uni.createMediaQueryObserver(this)
 
@@ -78,7 +82,7 @@
 					const tabbarUrl = tabbarName && (tabbarName === 'component' ? '/' : `/pages/tabBar/${tabbarName}/${tabbarName}`)
 					uni.switchTab({
 						url: tabbarUrl,
-						success(e) {
+						success (e) {
 							uni.navigateTo({
 								url: pageUrl
 							})
@@ -88,14 +92,14 @@
 
 			})
 		},
-		unmounted() {
+		unmounted () {
 			isPcObserver.disconnect()
 			isPhoneObserver.disconnect()
 		},
 		watch: {
 			isPC: {
 				immediate: true,
-				handler(newMatches) {
+				handler (newMatches) {
 					this.setMatchLeftWindow(newMatches)
 					// this.handlerRoute(this.$route)
 				}
@@ -103,13 +107,13 @@
 			// #ifndef VUE3
 			$route: {
 				immediate: true,
-				handler(newRoute) {
+				handler (newRoute) {
 					this.handlerRoute(newRoute)
 				}
 			},
 			// #endif
 			// #ifdef VUE3
-			$route(newRoute) {
+			$route (newRoute) {
 				this.handlerRoute(newRoute)
 			}
 			// #endif
@@ -118,7 +122,7 @@
 		methods: {
 			...mapMutations(['setMatchLeftWindow', 'setActive', 'setLeftWinActive']),
 
-			handlerRoute(newRoute) {
+			handlerRoute (newRoute) {
 				if (this.isPC) {
 					if (newRoute.path === '/') {
 						// uni.redirectTo({
@@ -144,7 +148,7 @@
 				}
 			},
 
-			switchTab() {
+			switchTab () {
 
 			}
 		}

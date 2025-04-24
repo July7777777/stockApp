@@ -23,15 +23,21 @@
         >
           <!-- 表头行 -->
           <uni-tr>
-            <uni-th align="center">日期</uni-th>
-            <uni-th align="center">姓名</uni-th>
-            <uni-th align="left">地址</uni-th>
+            <uni-th
+              v-for="i in tableTitle"
+              :key="i.title"
+              :align="i.align || 'center'"
+            >{{ i.title }}</uni-th>
           </uni-tr>
           <!-- 表格数据行 -->
-          <uni-tr>
-            <uni-td>2020-10-20</uni-td>
-            <uni-td>Jeson</uni-td>
-            <uni-td>北京市海淀区</uni-td>
+          <uni-tr
+            v-for="i in data"
+            :key="i.CODE"
+          >
+            <uni-td>{{ i.CODE }}</uni-td>
+            <uni-td>{{ i.NAME }}</uni-td>
+            <uni-td>{{ i.CATEGORY }}</uni-td>
+            <uni-td>{{ i.CATEGORYDESC }}</uni-td>
           </uni-tr>
         </uni-table>
       </view>
@@ -44,6 +50,14 @@
   // 使用 ref 创建单个响应式数据
   const count = ref(0);
   console.log(process.env.NODE_ENV)
+  const data = ref([]);
+
+  const tableTitle = ref([
+    { title: '代码', width: '20%' },
+    { title: '名称', width: '20%' },
+    { title: 'CATEGORY', width: '20%' },
+    { title: 'CATEGORYDESC', width: '20%' },
+  ]);
   // 点击按钮的处理函数
   const Search = async () => {
     console.log('按钮被点击了');
@@ -61,6 +75,7 @@
       //   }
       // })
       let res = await fundSearch(p);
+      data.value = res.Datas;
       console.log(res);
     } catch (error) {
       console.error('请求出错:', error);
