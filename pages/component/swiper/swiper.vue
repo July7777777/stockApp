@@ -1,105 +1,124 @@
 <template>
 	<view>
-		<page-head title="swiper,可滑动视图"></page-head>
-		<view class="uni-margin-wrap">
-			<swiper class="swiper" circular :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item>
-					<view class="swiper-item uni-bg-red">A</view>
-				</swiper-item>
-				<swiper-item>
-					<view class="swiper-item uni-bg-green">B</view>
-				</swiper-item>
-				<swiper-item>
-					<view class="swiper-item uni-bg-blue">C</view>
-				</swiper-item>
-			</swiper>
-		</view>
+		<page-head title="view"></page-head>
+		<view class="uni-padding-wrap uni-common-mt">
+			<button
+				class="mini-btn"
+				type="primary"
+				size="mini"
+				@click="Search"
+			>按钮</button>
 
-		<view class="swiper-list">
-			<view class="uni-list-cell uni-list-cell-pd">
-				<view class="uni-list-cell-db">指示点</view>
-				<switch :checked="indicatorDots" @change="changeIndicatorDots" />
+			<view class="">
+				<uni-table
+					border
+					stripe
+					emptyText="暂无更多数据"
+				>
+					<!-- 表头行 -->
+					<uni-tr>
+						<uni-th
+							v-for="i in tableTitle"
+							:key="i.title"
+							:align="i.align || 'center'"
+						>{{ i.title }}</uni-th>
+					</uni-tr>
+					<!-- 表格数据行 -->
+					<uni-tr
+						v-for="i in data"
+						:key="i.CODE"
+					>
+						<uni-td>{{ i.CODE }}</uni-td>
+						<uni-td>{{ i.NAME }}</uni-td>
+						<uni-td>{{ i.CATEGORY }}</uni-td>
+						<uni-td>{{ i.CATEGORYDESC }}</uni-td>
+					</uni-tr>
+				</uni-table>
 			</view>
-			<view class="uni-list-cell uni-list-cell-pd">
-				<view class="uni-list-cell-db">自动播放</view>
-				<switch :checked="autoplay" @change="changeAutoplay" />
-			</view>
-		</view>
-
-		<view class="uni-padding-wrap">
-			<view class="uni-common-mt">
-				<text>幻灯片切换时长(ms)</text>
-				<text class="info">{{duration}}</text>
-			</view>
-			<slider @change="durationChange" :value="duration" min="500" max="2000" />
-			<view class="uni-common-mt">
-				<text>自动播放间隔时长(ms)</text>
-				<text class="info">{{interval}}</text>
-			</view>
-			<slider @change="intervalChange" :value="interval" min="2000" max="10000" />
 		</view>
 	</view>
 </template>
-<script>
-	export default {
-		data() {
-			return {
-				background: ['color1', 'color2', 'color3'],
-				indicatorDots: true,
-				autoplay: true,
-				interval: 2000,
-				duration: 500
-			}
-		},
-		methods: {
-			changeIndicatorDots(e) {
-				this.indicatorDots = !this.indicatorDots
-			},
-			changeAutoplay(e) {
-				this.autoplay = !this.autoplay
-			},
-			intervalChange(e) {
-				this.interval = e.detail.value
-			},
-			durationChange(e) {
-				this.duration = e.detail.value
-			}
+<script setup>
+	import { ref, reactive } from 'vue';
+	import { stockLofList, indexLofList } from '@/api/apiStock.js'; // 根据实际路径引入
+	// 使用 ref 创建单个响应式数据
+	const count = ref(0);
+	console.log(process.env.NODE_ENV)
+	const data = ref([]);
+
+	const tableTitle = ref([
+		{ title: '代码', width: '20%' },
+		{ title: '名称', width: '20%' },
+		{ title: 'CATEGORY', width: '20%' },
+		{ title: 'CATEGORYDESC', width: '20%' },
+	]);
+	// 点击按钮的处理函数
+	const Search = async () => {
+		console.log('按钮被点击了');
+		try {
+			let p = { m: 1, key: '11' };
+			// uni.request({
+			//   url: 'http://localhost:3000/fundSearch',
+			//   method: 'GET',
+			//   data: p,
+			//   success (res) {
+			//     console.log(res);
+			//   },
+			//   fail (err) {
+			//     console.log('获取openid失败：', err);
+			//   }
+			// })
+			let res = await stockLofList(p);
+			data.value = res.Datas;
+			console.log(res);
+		} catch (error) {
+			console.error('请求出错:', error);
 		}
-	}
+	};
+	const get2 = async () => {
+		console.log('2按钮被点击了');
+		try {
+			let p = { FCODE: 160125 };
+			let res = await fundVarietieValuationDetail(p);
+			console.log(res);
+		} catch (error) {
+			console.error('请求出错:', error);
+		}
+	};
 </script>
 
 <style>
-	.uni-margin-wrap {
-		width:690rpx;
-		width: 100%;;
-	}
-	.swiper {
-		height: 300rpx;
-	}
-	.swiper-item {
-		display: block;
-		height: 300rpx;
-		line-height: 300rpx;
+	.flex-item {
+		width: 33.3%;
+		height: 200rpx;
 		text-align: center;
+		line-height: 200rpx;
 	}
 
-	.swiper-list {
-		margin-top: 40rpx;
-		margin-bottom: 0;
+	.flex-item-V {
+		width: 100%;
+		height: 150rpx;
+		text-align: center;
+		line-height: 150rpx;
 	}
 
-	.uni-common-mt{
-		margin-top:60rpx;
-		position:relative;
+	.text {
+		margin: 15rpx 10rpx;
+		padding: 0 20rpx;
+		background-color: #ebebeb;
+		height: 70rpx;
+		line-height: 70rpx;
+		text-align: center;
+		color: #777;
+		font-size: 26rpx;
 	}
 
-	.info {
-		position: absolute;
-		right:20rpx;
+	.desc {
+		/* text-indent: 40rpx; */
 	}
 
-    .uni-padding-wrap {
-        width:550rpx;
-        padding:0 100rpx;
-    }
+	.flex-pc {
+		display: flex;
+		justify-content: center;
+	}
 </style>
