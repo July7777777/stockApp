@@ -382,14 +382,14 @@
 	.border {
 		border: 1px solid #ccc;
 		border-radius: 4px;
-		width: 200px;
+		width: 228px;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
 	}
 
 	.selectBox {
-		width: 70px;
+		min-width: 70px;
 	}
 
 	.inputBox {

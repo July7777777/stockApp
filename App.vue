@@ -10,7 +10,7 @@
 	// #endif
 
 	export default {
-		onLaunch: function() {
+		onLaunch: function () {
 			// #ifdef H5
 			console.log(
 				`%c hello uniapp %c v${version} `,
@@ -44,10 +44,10 @@
 			})
 			// #endif
 		},
-		onShow: function() {
+		onShow: function () {
 			console.log('App Show')
 		},
-		onHide: function() {
+		onHide: function () {
 			console.log('App Hide')
 		},
 		globalData: {
@@ -65,6 +65,7 @@
 	/* uni.css - 通用组件、模板样式库，可以当作一套ui库应用 */
 	@import './common/uni.css';
 	@import '@/static/customicons.css';
+
 	/* H5 兼容 pc 所需 */
 	/* #ifdef H5 */
 	@media screen and (min-width: 768px) {
@@ -99,7 +100,7 @@
 	page {
 		background-color: #efeff4;
 		height: 100%;
-		font-size: 28rpx;
+		font-size: 24rpx;
 		/* line-height: 1.8; */
 	}
 
