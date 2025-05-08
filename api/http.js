@@ -48,11 +48,18 @@ function request(options) {
     });
   });
 }
+const xueQiuOptions =  {
 
+}
 export function get(url, data) {
   return request({ url, data, method: 'GET' });
 }
-
-export function post(url, data) {
-  return request({ url, data, method: 'POST' });
+export function getT(url, data) {
+  return request({ url:'/tiantian'+url, data, method: 'GET' });
 }
+export function getX(url, data) {
+  return request({ url:'/xueqiu'+url, data, method: 'GET',header:xueQiuOptions });
+}
+// export function post(url, data) {
+//   return request({ url, data, method: 'POST' });
+// }

@@ -114,7 +114,7 @@
 	// 修改导入路径
 	import { useRoute } from 'vue-router';
 	import { useCounterStore } from '@/store/counter';
-	import { ping } from '@/api/base.js'; // 根据实际路径引入
+	import { ping } from '@/api/apiBase.js'; // 根据实际路径引入
 	const counter = useCounterStore();
 	// 定义 props
 	const props = defineProps({

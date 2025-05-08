@@ -46,7 +46,7 @@
 </template>
 <script setup>
   import { ref, reactive } from 'vue';
-  import { fundSearch, fundVarietieValuationDetail } from '@/api/apiStock.js'; // 根据实际路径引入
+  import { fundSearch, fundVarietieValuationDetail } from '@/api/apiTianTian.js'; // 根据实际路径引入
   // 使用 ref 创建单个响应式数据
   const count = ref(0);
   console.log(process.env.NODE_ENV)

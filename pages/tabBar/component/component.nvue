@@ -59,7 +59,7 @@
 						]
 					}, {
 						id: 'content',
-						name: '基础内容',
+						name: '项总专用',
 						open: false,
 						pages: ['text', 'rich-text', 'progress']
 					}, {

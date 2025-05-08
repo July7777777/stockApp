@@ -114,7 +114,7 @@
 	// 修改导入路径
 	import { useRoute } from 'vue-router';
 	import { useCounterStore } from '@/store/counter';
-	import { ping } from '@/api/base.js'; // 根据实际路径引入
+	import { ping } from '@/api/apiBase.js'; // 根据实际路径引入
 	const counter = useCounterStore();
 	// 定义 props
 	const props = defineProps({
@@ -327,7 +327,8 @@
 				ping()
 					.then(res => {
 						const duration = Date.now() - start;
-						arr.value.push({ label: '网络状况:', value: duration + 'ms' })
+						arr.value.push({ label: '网络状况:', value: duration + 'ms' }, { label: '测试结束:', value: 'Enjoy your self' })
+						// arr.value.push({ label: '测试结束:', value: 'Enjoy your self' })
 						console.log('pingConfirm', res);
 					}).catch(err => {
 						arr.value.push({ label: '网络状况:', value: '连接失败' }, { label: '提示:', value: '请更换 协议 或 IP ' })
