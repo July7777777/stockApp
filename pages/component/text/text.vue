@@ -11,14 +11,15 @@
 			<view class="uni-btn-v">
 				<button
 					type="primary"
-					@click="add"
+					@click="stock"
 				>add line</button>
 			</view>
 		</view>
 	</view>
 </template>
 <script>
-	import { kline } from '@/api/apiXueQiu.js';
+	import { stockKline, stockGet } from '@/api/apiTianTian.js';
+
 	export default {
 		data () {
 			return {
@@ -26,30 +27,27 @@
 			}
 		},
 		methods: {
-			add () {
-				console.log('aaa')
+			stock () {
 				let p = {
-					"symbol": "HKHSTECH",
-					"begin": new Date().getTime(),
-					"period": "day",
-					"type": "before",
-					"count": "-2",
-					"indicator": "kline"
-					// "indicator": "kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance"
+					secid: '0.160125',
 				}
-				// https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol=HKHSTECH&begin=1746610030048&period=day&type=before&count=-2&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance
-				kline(p)
-					.then(res => {
-						console.log('pingConfirm', res);
-					}).catch(err => {
-
-						console.error('catch', err);
-					})
-					.finally(() => {
-						loading.value = false;
-					});
+				stockGet(p).then(res => {
+					console.log('res', res);
+				})
 			},
-
+			getData () {
+				let p = {
+					klt: 101,
+					fqt: 1,
+					lmt: 2,
+					end: this.$dayjs().format('YYYYMMDD'),
+					fields1: 'f1,f2,f3,f4,f5,f6,f7,f8',
+					fields2: 'f51,f59',
+				}
+				Promise.all([stockKline({ ...p, secid: '124.HSCGSI' }), stockKline({ ...p, secid: '124.HSTECH' })]).then(res => {
+					console.log('res', res);
+				})
+			}
 		}
 	}
 </script>

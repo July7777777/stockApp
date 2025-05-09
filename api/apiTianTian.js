@@ -25,3 +25,9 @@ export const indexLofList = params => getT('/indexLofList', params);
 
 // 获取股票LOF列表 参数 ___jsl=LST___t=1745568051745&only_owned=&rp=25    only_owned暂未不可用
 export const stockLofList = params => getT('/stockLofList', params);
+
+// 获取股票等 k线走势图
+export const stockKline = params => getT('/stockKline', params);
+
+// 获取 股票详情
+export const stockGet = params => getT('/stockGet', params);
