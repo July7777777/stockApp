@@ -93,8 +93,9 @@
 					let C = this.getD(this.HSTECH.klines[0])
 					let D = this.getD(this.HSTECH.klines[1])
 					let E = new Decimal(this.SZ160125.premium_rate)
-					let F = A.plus(B).plus(C).plus(D)
-					return F.div(2).minus(E).toFixed(2) + '%'
+					let F = A.plus(B).plus(C).plus(D).div(2)
+					return E.minus(F).toFixed(2) + '%'
+					// return F.div(2).minus(E).toFixed(2) + '%'
 				} else {
 					return '暂无数据'
 				}
