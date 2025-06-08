@@ -25,7 +25,7 @@ function request(options) {
   // 合并配置
   const mergedOptions = Object.assign({}, defaultOptions, options);
   mergedOptions.url = baseUrl + mergedOptions.url;
-
+  console.log({mergedOptions})
   // 发起请求
   uni.showLoading({ title: '加载中...' }); // 可选，根据需要显示加载提示
   return new Promise((resolve, reject) => {
@@ -49,7 +49,9 @@ function request(options) {
   });
 }
 const xueQiuOptions =  {
-
+    'bypass-tunnel-reminder': 'stockApp',
+    'content-type': 'application/json',
+    'XueQiuCookie':'xq_a_token=1761314ec4bc6cbe0dec68e68a1d6903623a1853',
 }
 export function get(url, data) {
   return request({ url, data, method: 'GET' });
