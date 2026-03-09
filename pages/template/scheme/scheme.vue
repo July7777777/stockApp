@@ -15,33 +15,26 @@
 				class="uni-panel"
 			>
 				<view class="uni-panel-h">
-					<view class="">{{ maskToken(item.token) }} </view>
-					<view class="">{{ item.usage }}</view>
+					<view class="token-text">{{ maskToken(item.token) }}</view>
+					<view class="usage-info">
+						<view class="progress-bar-bg">
+							<view
+								class="progress-bar-fill"
+								:style="{
+									width: getProgressWidth(item.usage),
+									background: getProgressColor(item.usage)
+								}"
+							></view>
+						</view>
+						<view class="usage-text">{{ item.usage }}%</view>
+					</view>
 				</view>
 			</view>
 		</view>
-		<form @submit="openQQ">
-			<view>
-				<view class="uni-title">请输入token：</view>
-				<view class="uni-list">
-					<uni-easyinput
-						v-model="value"
-						placeholder="请输入token"
-						suffixIcon="plusempty"
-					>
-						<!-- <template #suffixIcon>
-								<button
-									class="uni-btn uni-btn-mini uni-btn-radius"
-									type="primary"
-									size="mini"
-								>搜索</button>
-							</template> -->
-					</uni-easyinput>
-				</view>
-			</view>
-		</form>
-		<!-- 弹出框 -->
+
+
 		<view>
+			<!-- 弹出框 -->
 			<uni-popup
 				ref="inputDialog"
 				type="dialog"
@@ -52,9 +45,24 @@
 					title="输入内容"
 					value="对话框预置提示内容!"
 					placeholder="请输入内容"
-					@confirm="dialogInputConfirm"
+					@confirm="InputConfirm"
 				></uni-popup-dialog>
 			</uni-popup>
+
+			<movable-area class="full-screen-area">
+				<movable-view
+					:x="moveX"
+					:y="moveY"
+					direction="all"
+					inertia
+					out-of-bounds
+					@click="popupOpen"
+				><uni-icons
+						type="plus"
+						color="#007AFF"
+						size="30"
+					/></movable-view>
+			</movable-area>
 		</view>
 	</view>
 	<!-- </view> -->
@@ -72,13 +80,29 @@
 					},
 					{
 						token: "91*************************E8",
-						usage: 0
+						usage: 10
 					}
 				]
 			};
 		},
 		methods: {
-			inputDialogToggle () {
+			popupOpen () {
+				this.$refs.inputDialog.open()
+			},
+			// 计算进度条宽度（百分比）
+			getProgressWidth (usage) {
+				const percentage = Math.max(0, Math.min(100, usage));
+				return percentage + '%';
+			},
+
+			// 计算进度条颜色（绿->黄->红）
+			getProgressColor (usage) {
+				const percentage = Math.max(0, Math.min(100, usage));
+				const hue = 120 - (percentage * 1.2); // 0%->120(绿), 100%->0(红)
+				return `hsl(${hue}, 88%, 60%)`;
+			},
+			InputConfirm (e) {
+				console.log(e)
 				// this.$refs.inputDialog.open()
 			},
 			maskToken (value) {
@@ -92,105 +116,28 @@
 			submit (e) {
 				e.preventDefault();
 			},
-			openBrowser (url) {
-				plus.runtime.openURL(url)
-			},
-			openMarket (marketPackageName) {
-				var appurl;
-				if (plus.os.name == "Android") {
-					appurl = "market://details?id=io.dcloud.hellouniapp";//可能部分应用商店没有收录
-				}
-				else {
-					appurl = "itms-apps://itunes.apple.com/cn/app/hello-uni-app/id1417078253";
-				}
-				if (typeof (marketPackageName) == "undefined") {
-					plus.runtime.openURL(appurl, function (res) {
-						console.log(res);
-					});
-				} else {//强制指定某个Android应用市场的包名，通过这个包名启动指定app
-					if (plus.os.name == "Android") {
-						plus.runtime.openURL(appurl, function (res) {
-							plus.nativeUI.alert("本机没有安装应用宝");
-						}, marketPackageName);
-					} else {
-						plus.nativeUI.alert("仅Android手机才支持应用宝");
-					}
-				}
-			},
-			openTaobao (url) {
-				plus.runtime.openURL(url, function (res) {
-					uni.showModal({
-						content: "本机未检测到淘宝客户端，是否打开浏览器访问淘宝？",
-						success: function (res) {
-							if (res.confirm) {
-								plus.runtime.openURL("https://s.taobao.com/search?q=uni-app")
-							}
-						}
-					})
-				});
-			},
-			openMap () {
-				var url = "";
-				if (plus.os.name == "Android") {
-					var hasBaiduMap = plus.runtime.isApplicationExist({ pname: 'com.baidu.BaiduMap', action: 'baidumap://' });
-					var hasAmap = plus.runtime.isApplicationExist({ pname: 'com.autonavi.minimap', action: 'androidamap://' });
-					var urlBaiduMap = "baidumap://map/marker?location=39.968789,116.347247&title=DCloud&src=Hello%20uni-app";
-					var urlAmap = "androidamap://viewMap?sourceApplication=Hello%20uni-app&poiname=DCloud&lat=39.9631018208&lon=116.3406135236&dev=0"
-					if (hasAmap && hasBaiduMap) {
-						plus.nativeUI.actionSheet({ title: "选择地图应用", cancel: "取消", buttons: [{ title: "百度地图" }, { title: "高德地图" }] }, function (e) {
-							switch (e.index) {
-								case 1:
-									plus.runtime.openURL(urlBaiduMap);
-									break;
-								case 2:
-									plus.runtime.openURL(urlAmap);
-									break;
-							}
-						})
-					}
-					else if (hasAmap) {
-						plus.runtime.openURL(urlAmap);
-					}
-					else if (hasBaiduMap) {
-						plus.runtime.openURL(urlBaiduMap);
-					}
-					else {
-						url = "geo:39.96310,116.340698?q=%e6%95%b0%e5%ad%97%e5%a4%a9%e5%a0%82";
-						plus.runtime.openURL(url); //如果是国外应用，应该优先使用这个，会启动google地图。这个接口不能统一坐标系，进入百度地图时会有偏差
-					}
-				} else {
-					// iOS上获取本机是否安装了百度高德地图，需要在manifest里配置，在manifest.json文件app-plus->distribute->apple->urlschemewhitelist节点下添加（如urlschemewhitelist:["iosamap","baidumap"]）
-					plus.nativeUI.actionSheet({ title: "选择地图应用", cancel: "取消", buttons: [{ title: "Apple地图" }, { title: "百度地图" }, { title: "高德地图" }] }, function (e) {
-						console.log("e.index: " + e.index);
-						switch (e.index) {
-							case 1:
-								url = "http://maps.apple.com/?q=%e6%95%b0%e5%ad%97%e5%a4%a9%e5%a0%82&ll=39.96310,116.340698&spn=0.008766,0.019441";
-								break;
-							case 2:
-								url = "baidumap://map/marker?location=39.968789,116.347247&title=DCloud&src=Hello%20uni-app";
-								break;
-							case 3:
-								url = "iosamap://viewMap?sourceApplication=Hello%20uni-app&poiname=DCloud&lat=39.9631018208&lon=116.3406135236&dev=0";
-								break;
-							default:
-								break;
-						}
-						if (url != "") {
-							plus.runtime.openURL(url, function (e) {
-								plus.nativeUI.alert("本机未安装指定的地图应用");
-							});
-						}
-					})
-				}
-			},
-			openQQ: function (e) {
-				// console.log("e.detail.value: " + JSON.stringify(e.detail.value));
-				// 没有校验qq号是否为空或合法数字，如果不是可用的qq号，启动qq后会停留在qq主界面
-				plus.runtime.openURL('mqqwpa://im/chat?chat_type=' + e.detail.value.token + '&uin=' + e.detail.value.usage, function (res) {
-					plus.nativeUI.alert("本机没有安装QQ，无法启动");
-				});
-			}
-		}
+		},
+
+		// onLoad () {
+		// 	const systemInfo = uni.getSystemInfoSync();
+		// 	// rpx 转 px 的换算系数
+		// 	const rpxToPx = systemInfo.screenWidth / 750;
+		// 	const buttonSize = 50 * rpxToPx;
+
+		// 	// 最右边，垂直居中
+		// 	this.moveX = systemInfo.screenWidth - buttonSize - 20;
+		// 	this.moveY = systemInfo.screenHeight / 2 - buttonSize / 2;
+		// },
+		onLoad () {
+			// 获取系统信息
+			const systemInfo = uni.getSystemInfoSync();
+
+			// 计算按钮初始位置（最右边，垂直居中）
+			const rpxToPx = systemInfo.screenWidth / 750;
+			const buttonSize = 50 * rpxToPx;
+			this.moveX = systemInfo.screenWidth - buttonSize - 20;
+			this.moveY = systemInfo.screenHeight / 2 - buttonSize / 2;
+		},
 	};
 </script>
 <style>
@@ -199,5 +146,76 @@
 	.button {
 		margin: 30rpx;
 		color: #007AFF;
+	}
+
+	.uni-panel-h {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 20rpx;
+	}
+
+	.usage-info {
+		display: flex;
+		align-items: center;
+		gap: 15rpx;
+		width: 200rpx;
+	}
+
+	/* 进度条背景 */
+	.progress-bar-bg {
+		width: 120rpx;
+		height: 20rpx;
+		background-color: #e0e0e0;
+		border-radius: 10rpx;
+		overflow: hidden;
+	}
+
+	/* 进度条填充 */
+	.progress-bar-fill {
+		height: 100%;
+		border-radius: 10rpx;
+		transition: width 0.3s ease, background 0.3s ease;
+	}
+
+	/* 使用百分比文字 */
+	.usage-text {
+		font-size: 24rpx;
+		color: #666;
+		width: 60rpx;
+		text-align: right;
+	}
+
+	.full-screen-area {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		background-color: transparent;
+		/* 设为透明，不影响底层内容 */
+		z-index: 999;
+		/* 确保在最上层 */
+		overflow: hidden;
+		pointer-events: none;
+		/* 不拦截点击事件 */
+	}
+
+	movable-view {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 50rpx;
+		width: 50rpx;
+		/* background-color: #007AFF; */
+		color: #fff;
+		border-radius: 50%;
+		/* 可选：圆形按钮 */
+		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+		/* 可选：添加阴影 */
+		pointer-events: auto;
+		/* 可以响应点击 */
 	}
 </style>
