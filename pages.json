@@ -1329,7 +1329,7 @@
         {
           "path": "scheme/scheme",
           "style": {
-            "navigationBarTitleText": "打开外部应用"
+            "navigationBarTitleText": "token配置与用量"
           }
         },
         // #ifdef APP-PLUS || MP-WEIXIN || MP-QQ || H5

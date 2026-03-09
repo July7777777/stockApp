@@ -54,7 +54,7 @@
 				</view>
 			</view>
 		</view>
-		<view @click="showPopup">更改全局baseUrl</view>
+		<view @click="showPopup">更改全局baseUrl111</view>
 
 		<uni-popup
 			ref="inputDialog"
@@ -232,15 +232,16 @@
 			name: 'renderjs',
 			url: 'renderjs',
 		},
+		{
+			name: '打开外部应用1',
+			url: 'scheme',
+		},
 		// #ifdef APP-PLUS
 		{
 			name: '问题反馈',
 			url: '/platforms/app-plus/feedback/feedback',
 		},
-		{
-			name: '打开外部应用',
-			url: 'scheme',
-		},
+
 		// #endif
 		// #ifdef APP-PLUS || MP-WEIXIN || MP-QQ || H5
 		// {

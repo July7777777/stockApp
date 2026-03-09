@@ -54,7 +54,7 @@
 				</view>
 			</view>
 		</view>
-		<view @click="showPopup">更改全局baseUrl</view>
+		<view @click="showPopup">更改全局baseUrl111</view>
 
 		<uni-popup
 			ref="inputDialog"
@@ -232,15 +232,16 @@
 			name: 'renderjs',
 			url: 'renderjs',
 		},
+		{
+			name: '打开外部应用1',
+			url: 'scheme',
+		},
 		// #ifdef APP-PLUS
 		{
 			name: '问题反馈',
 			url: '/platforms/app-plus/feedback/feedback',
 		},
-		{
-			name: '打开外部应用',
-			url: 'scheme',
-		},
+
 		// #endif
 		// #ifdef APP-PLUS || MP-WEIXIN || MP-QQ || H5
 		// {
@@ -327,8 +328,7 @@
 				ping()
 					.then(res => {
 						const duration = Date.now() - start;
-						arr.value.push({ label: '网络状况:', value: duration + 'ms' }, { label: '测试结束:', value: 'Enjoy your self' })
-						// arr.value.push({ label: '测试结束:', value: 'Enjoy your self' })
+						arr.value.push({ label: '网络状况:', value: duration + 'ms' })
 						console.log('pingConfirm', res);
 					}).catch(err => {
 						arr.value.push({ label: '网络状况:', value: '连接失败' }, { label: '提示:', value: '请更换 协议 或 IP ' })
@@ -383,14 +383,14 @@
 	.border {
 		border: 1px solid #ccc;
 		border-radius: 4px;
-		width: 228px;
+		width: 200px;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
 	}
 
 	.selectBox {
-		min-width: 70px;
+		width: 70px;
 	}
 
 	.inputBox {
