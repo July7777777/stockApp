@@ -61,7 +61,7 @@
 						id: 'content',
 						name: '项总专用',
 						open: false,
-						pages: ['text', 'rich-text', 'progress']
+						pages: ['text', 'rich-text', 'progress','lof']
 					}, {
 						id: 'form',
 						name: '表单组件',

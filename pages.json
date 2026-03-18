@@ -360,8 +360,14 @@
         },
         "disableScroll": true
       }
-    }
+    },
     // #endif
+    {
+      "path": "pages/component/lof/lof",
+      "style": {
+        "navigationBarTitleText": "lof列表"
+      }
+    }
   ],
   "subPackages": [
     {
