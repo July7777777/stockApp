@@ -4,7 +4,12 @@
 	font-style: normal;
 	src: url('~@/static/uni.ttf') format('truetype');
 }
-
+.page-content{
+	width: 100%;
+}
+.bs {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
 /* #ifdef H5 */
 .fix-left-window {
 	padding-left: var(--window-left);
